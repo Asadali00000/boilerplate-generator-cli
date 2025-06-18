@@ -38,7 +38,6 @@ class BoilerplateGenerator {
   // Main CLI handler
   run() {
     const args = process.argv.slice(2);
-    console.log(args, process.argv);
 
     if (args.length < 2) {
       this.showHelp();
@@ -119,8 +118,8 @@ class BoilerplateGenerator {
     console.log(`${colors.bold}Available Templates:${colors.reset}`);
     console.log(`  ${colors.green}redux${colors.reset}      - Redux store setup with slices, actions, selectors`);
     console.log(`  ${colors.green}api${colors.reset}        - API service layer with hooks and types`);
-    console.log(`  ${colors.green}auth${colors.reset}       - Authentication system with context`);
-    console.log(`  ${colors.green}form${colors.reset}       - Form components with validation`);
+    console.log(`  ${colors.yellow}auth${colors.reset}       - Authentication system with context(coming soon)`);
+    console.log(`  ${colors.yellow}form${colors.reset}       - Form components with validation(coming soon)`);
     console.log(`  ${colors.yellow}crud${colors.reset}       - Complete CRUD operations (coming soon)`);
     console.log(`  ${colors.yellow}hooks${colors.reset}      - Collection of custom React hooks (coming soon)`);
     console.log(`  ${colors.yellow}context${colors.reset}    - React Context setup (coming soon)`);

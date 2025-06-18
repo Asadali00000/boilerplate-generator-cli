@@ -25,6 +25,7 @@ class BoilerplateGenerator {
       api: this.apiBoilerplate.generateAPIBoilerplate.bind(this.apiBoilerplate),
       auth: this.authBoilerplate.generateAuthBoilerplate.bind(this.authBoilerplate),
       form: this.formBoilerplate.generateFormBoilerplate.bind(this.formBoilerplate),
+      'react-native': this.generateReactNativeBoilerplate.bind(this),
       // TODO: Add other boilerplate types as they are implemented
       // crud: this.crudBoilerplate.generateCRUDBoilerplate.bind(this.crudBoilerplate),
       // hooks: this.hooksBoilerplate.generateHooksBoilerplate.bind(this.hooksBoilerplate),
@@ -32,6 +33,51 @@ class BoilerplateGenerator {
       // middleware: this.middlewareBoilerplate.generateMiddlewareBoilerplate.bind(this.middlewareBoilerplate),
       // components: this.componentBoilerplate.generateComponentBoilerplate.bind(this.componentBoilerplate),
       // utils: this.utilsBoilerplate.generateUtilsBoilerplate.bind(this.utilsBoilerplate)
+    };
+  }
+
+  // Generate all React Native boilerplates
+  generateReactNativeBoilerplate(projectPath, options) {
+    console.log(`${colors.blue}Generating React Native boilerplate...${colors.reset}`);
+
+    const allDependencies = [];
+    const allInstructions = [];
+    const allFiles = [];
+
+    // Generate Redux boilerplate only (compatible with React Native)
+    console.log(`${colors.cyan}Adding Redux boilerplate...${colors.reset}`);
+    const reduxResult = this.reduxBoilerplate.generateReduxBoilerplate(projectPath, options);
+    allDependencies.push(...(reduxResult.dependencies || []));
+    allInstructions.push(...(reduxResult.instructions || []));
+    allFiles.push(...(reduxResult.files || []));
+
+    // Add React Native specific dependencies
+    const reactNativeDeps = [
+      '@react-navigation/native',
+      '@react-navigation/stack',
+      '@react-navigation/bottom-tabs',
+      'react-native-vector-icons',
+      'react-native-gesture-handler',
+      'react-native-safe-area-context',
+      'react-native-screens',
+      '@react-native-async-storage/async-storage'
+    ];
+    allDependencies.push(...reactNativeDeps);
+
+    // Add React Native specific instructions
+    const reactNativeInstructions = [
+      'Install React Native dependencies: npm install ' + reactNativeDeps.join(' '),
+      'Link vector icons: npx react-native link react-native-vector-icons',
+      'For iOS: cd ios && pod install',
+      'Configure navigation in App.js',
+      'Add vector icons to android/app/build.gradle'
+    ];
+    allInstructions.push(...reactNativeInstructions);
+
+    return {
+      dependencies: [...new Set(allDependencies)], // Remove duplicates
+      instructions: allInstructions,
+      files: allFiles
     };
   }
 
@@ -110,22 +156,24 @@ class BoilerplateGenerator {
     console.log(`  boiler-generate ./components form contact`);
     console.log(`  boiler-generate ./api api products`);
     console.log(`  boiler-generate ./src auth`);
+    console.log(`  boiler-generate ./src react-native`);
     console.log(`  boiler-generate ./utils hooks\n`);
     this.showAvailableTemplates();
   }
 
   showAvailableTemplates() {
     console.log(`${colors.bold}Available Templates:${colors.reset}`);
-    console.log(`  ${colors.green}redux${colors.reset}      - Redux store setup with slices, actions, selectors`);
-    console.log(`  ${colors.green}api${colors.reset}        - API service layer with hooks and types`);
-    console.log(`  ${colors.yellow}auth${colors.reset}       - Authentication system with context(coming soon)`);
-    console.log(`  ${colors.yellow}form${colors.reset}       - Form components with validation(coming soon)`);
-    console.log(`  ${colors.yellow}crud${colors.reset}       - Complete CRUD operations (coming soon)`);
-    console.log(`  ${colors.yellow}hooks${colors.reset}      - Collection of custom React hooks (coming soon)`);
-    console.log(`  ${colors.yellow}context${colors.reset}    - React Context setup (coming soon)`);
-    console.log(`  ${colors.yellow}middleware${colors.reset} - Express middleware collection (coming soon)`);
-    console.log(`  ${colors.yellow}components${colors.reset} - Reusable component template (coming soon)`);
-    console.log(`  ${colors.yellow}utils${colors.reset}      - Utility functions collection (coming soon)`);
+    console.log(`  ${colors.green}redux${colors.reset}        - Redux store setup with slices, actions, selectors`);
+    console.log(`  ${colors.green}api${colors.reset}          - API service layer with hooks and types`);
+    console.log(`  ${colors.green}auth${colors.reset}         - Authentication system with context`);
+    console.log(`  ${colors.green}form${colors.reset}         - Form components with validation`);
+    console.log(`  ${colors.green}react-native${colors.reset} - Complete React Native setup (Redux + API + Auth + Form)`);
+    console.log(`  ${colors.yellow}crud${colors.reset}         - Complete CRUD operations (coming soon)`);
+    console.log(`  ${colors.yellow}hooks${colors.reset}        - Collection of custom React hooks (coming soon)`);
+    console.log(`  ${colors.yellow}context${colors.reset}     - React Context setup (coming soon)`);
+    console.log(`  ${colors.yellow}middleware${colors.reset}  - Express middleware collection (coming soon)`);
+    console.log(`  ${colors.yellow}components${colors.reset}  - Reusable component template (coming soon)`);
+    console.log(`  ${colors.yellow}utils${colors.reset}       - Utility functions collection (coming soon)`);
   }
 }
 

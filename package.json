@@ -1,0 +1,49 @@
+{
+  "name": "my-boilerplate-generator",
+  "version": "1.0.0",
+  "description": "CLI tool to generate boilerplate code in existing projects",
+  "main": "src/index.js",
+  "bin": {
+    "boiler-generate": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build step needed\"",
+    "prepublishOnly": "echo \"Ready to publish\""
+  },
+  "keywords": [
+    "boilerplate",
+    "generator",
+    "cli",
+    "react",
+    "redux",
+    "api",
+    "scaffold",
+    "template"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/my-boilerplate-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/my-boilerplate-generator/issues"
+  },
+  "homepage": "https://github.com/yourusername/my-boilerplate-generator#readme",
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "boilerplate-cli": "^0.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  }
+}

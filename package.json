@@ -1,10 +1,10 @@
 {
   "name": "my-boilerplate-generator",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "CLI tool to generate boilerplate code in existing projects",
   "main": "src/index.js",
   "bin": {
-    "boiler-generate": "./src/index.js"
+    "my-boilerplate-generator": "./src/index.js"
   },
   "scripts": {
     "start": "node src/index.js",
@@ -29,12 +29,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/my-boilerplate-generator.git"
+    "url": "https://github.com/Asadali00000/boilerplate-generator-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/my-boilerplate-generator/issues"
+    "url": "https://github.com/Asadali00000/boilerplate-generator-cli.git/issues"
   },
-  "homepage": "https://github.com/yourusername/my-boilerplate-generator#readme",
+  "homepage": "https://github.com/Asadali00000/boilerplate-generator-cli#readme",
   "files": [
     "src/",
     "README.md",

@@ -3,13 +3,13 @@
 const fs = require('fs');
 const path = require('path');
 const colors = require('./utils/colors');
-const { createFileStructure } = require('./utils/fileUtils');
 
 // Import boilerplate modules
 const ReduxBoilerplate = require('./boilerplates/redux');
 const APIBoilerplate = require('./boilerplates/api');
 const AuthBoilerplate = require('./boilerplates/auth');
 const FormBoilerplate = require('./boilerplates/form');
+const askToInstall = require('./utils/installPackages');
 
 class BoilerplateGenerator {
   constructor() {
@@ -44,7 +44,7 @@ class BoilerplateGenerator {
     const allInstructions = [];
     const allFiles = [];
 
-    // Generate Redux boilerplate only (compatible with React Native)
+    // Generate Redux boilerplate
     console.log(`${colors.cyan}Adding Redux boilerplate...${colors.reset}`);
     const reduxResult = this.reduxBoilerplate.generateReduxBoilerplate(projectPath, options);
     allDependencies.push(...(reduxResult.dependencies || []));
@@ -122,6 +122,9 @@ class BoilerplateGenerator {
     const result = this.templates[templateType](fullPath, options);
 
     console.log(`${colors.green}${colors.bold}✓ ${templateType} boilerplate added successfully!${colors.reset}`);
+		  process.stdout.write('\n')
+
+
 
     if (result.dependencies && result.dependencies.length > 0) {
       console.log(`${colors.cyan}${colors.bold}📦 Required dependencies:${colors.reset}`);
@@ -143,6 +146,15 @@ class BoilerplateGenerator {
         console.log(`  ${colors.green}✓ ${file}${colors.reset}`);
       });
     }
+		setImmediate(async () => {
+			try{
+
+				await askToInstall(result.dependencies)
+			}catch(e){
+				console.log(`  ${colors.red}• error while installing dependencies ${colors.reset}`);
+
+			}
+		})
   }
 
   // Show help and available templates

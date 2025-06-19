@@ -41,7 +41,9 @@
     "LICENSE"
   ],
   "dependencies": {
-    "inquirer": "^8.2.6"
+    "@reduxjs/toolkit": "^2.8.2",
+    "inquirer": "^8.2.6",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "eslint": "^9.29.0"

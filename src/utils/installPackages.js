@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 const colors = require('./colors');
 
 
@@ -22,18 +22,18 @@ async function askToInstall(dependencies){
 function installPackages(dependencies){
 
 	dependencies.forEach(dep => {
-		console.log(dep)
-		const installProcess=exec(`npm install ${dep}`);
-		installProcess.stdout.pipe(process.stdout)
-		installProcess.stderr.pipe(process.stderr)
+		// console.log(dep)
+		// const installProcess=execSync(`npm install ${dep}`);
+		// installProcess.stdout.pipe(process.stdout)
+		// installProcess.stderr.pipe(process.stderr)
 
-		installProcess.on('exit', (code) => {
-			if (code === 0) {
-				console.log(`  ${colors.green}✓ ${dep} installed successfully. ${colors.reset}`);
-			} else {
-				console.error(`❌ Failed to install ${packageName} (exit code ${code})`)
-			}
-		})
+		try {
+            console.log(dep);
+            execSync(`npm install ${dep}`, { stdio: 'inherit' });
+            console.log(`  ${colors.green}✓ ${dep} installed successfully. ${colors.reset}`);
+        } catch (err) {
+            console.error(`❌ Failed to install ${dep}`);
+        }
 	});
 }
 module.exports=askToInstall

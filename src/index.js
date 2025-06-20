@@ -10,6 +10,7 @@ const APIBoilerplate = require('./boilerplates/api');
 const AuthBoilerplate = require('./boilerplates/auth');
 const FormBoilerplate = require('./boilerplates/form');
 const askToInstall = require('./utils/installPackages');
+const ReactNativeNavigationBoilerplate = require('./boilerplatesReactNative/navigation');
 
 class BoilerplateGenerator {
   constructor() {
@@ -18,6 +19,7 @@ class BoilerplateGenerator {
     this.apiBoilerplate = new APIBoilerplate();
     this.authBoilerplate = new AuthBoilerplate();
     this.formBoilerplate = new FormBoilerplate();
+    this.reactNativeNavigationBoilerplate = new ReactNativeNavigationBoilerplate();
 
     // Map template types to their respective generators
     this.templates = {
@@ -26,6 +28,7 @@ class BoilerplateGenerator {
       auth: this.authBoilerplate.generateAuthBoilerplate.bind(this.authBoilerplate),
       form: this.formBoilerplate.generateFormBoilerplate.bind(this.formBoilerplate),
       'react-native': this.generateReactNativeBoilerplate.bind(this),
+      'react-native-navigation': this.reactNativeNavigationBoilerplate.generateNavigationBoilerplate.bind(this.reactNativeNavigationBoilerplate),
       // TODO: Add other boilerplate types as they are implemented
       // crud: this.crudBoilerplate.generateCRUDBoilerplate.bind(this.crudBoilerplate),
       // hooks: this.hooksBoilerplate.generateHooksBoilerplate.bind(this.hooksBoilerplate),
@@ -122,9 +125,7 @@ class BoilerplateGenerator {
     const result = this.templates[templateType](fullPath, options);
 
     console.log(`${colors.green}${colors.bold}✓ ${templateType} boilerplate added successfully!${colors.reset}`);
-		  process.stdout.write('\n')
-
-
+    process.stdout.write('\n');
 
     if (result.dependencies && result.dependencies.length > 0) {
       console.log(`${colors.cyan}${colors.bold}📦 Required dependencies:${colors.reset}`);
@@ -146,15 +147,13 @@ class BoilerplateGenerator {
         console.log(`  ${colors.green}✓ ${file}${colors.reset}`);
       });
     }
-		setImmediate(async () => {
-			try{
-
-				await askToInstall(result.dependencies)
-			}catch(e){
-				console.log(`  ${colors.red}• error while installing dependencies ${colors.reset}`);
-
-			}
-		})
+    setImmediate(async () => {
+      try {
+        await askToInstall(result.dependencies)
+      } catch (e) {
+        console.log(`  ${colors.red}• error while installing dependencies ${colors.reset}`);
+      }
+    })
   }
 
   // Show help and available templates
@@ -169,6 +168,7 @@ class BoilerplateGenerator {
     console.log(`  boiler-generate ./api api products`);
     console.log(`  boiler-generate ./src auth`);
     console.log(`  boiler-generate ./src react-native`);
+    console.log(`  boiler-generate ./src react-native-navigation`);
     console.log(`  boiler-generate ./utils hooks\n`);
     this.showAvailableTemplates();
   }
@@ -180,6 +180,7 @@ class BoilerplateGenerator {
     console.log(`  ${colors.green}auth${colors.reset}         - Authentication system with context`);
     console.log(`  ${colors.green}form${colors.reset}         - Form components with validation`);
     console.log(`  ${colors.green}react-native${colors.reset} - Complete React Native setup (Redux + API + Auth + Form)`);
+    console.log(`  ${colors.green}react-native-navigation${colors.reset} - React Native Navigation boilerplate (Stack, Tab, Drawer, Auth)`);
     console.log(`  ${colors.yellow}crud${colors.reset}         - Complete CRUD operations (coming soon)`);
     console.log(`  ${colors.yellow}hooks${colors.reset}        - Collection of custom React hooks (coming soon)`);
     console.log(`  ${colors.yellow}context${colors.reset}     - React Context setup (coming soon)`);

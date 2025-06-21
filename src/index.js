@@ -53,16 +53,15 @@ class BoilerplateGenerator {
     allDependencies.push(...(reduxResult.dependencies || []));
     allInstructions.push(...(reduxResult.instructions || []));
     allFiles.push(...(reduxResult.files || []));
+    console.log(`${colors.cyan}Adding Navigation boilerplate...${colors.reset}`);
+    const navigationResult = this.reactNativeNavigationBoilerplate.generateNavigationBoilerplate(projectPath, options);
+    allDependencies.push(...(navigationResult.dependencies || []));
+    allInstructions.push(...(navigationResult.instructions || []));
+    allFiles.push(...(navigationResult.files || []));
 
     // Add React Native specific dependencies
     const reactNativeDeps = [
-      '@react-navigation/native',
-      '@react-navigation/stack',
-      '@react-navigation/bottom-tabs',
       'react-native-vector-icons',
-      'react-native-gesture-handler',
-      'react-native-safe-area-context',
-      'react-native-screens',
       '@react-native-async-storage/async-storage'
     ];
     allDependencies.push(...reactNativeDeps);
@@ -161,15 +160,15 @@ class BoilerplateGenerator {
     console.log(`${colors.bold}${colors.blue}Boilerplate Generator CLI${colors.reset}`);
     console.log(`Generate clean, minimal boilerplate code for your existing projects\n`);
     console.log(`${colors.bold}Usage:${colors.reset}`);
-    console.log(`  boiler-generate <path> <template> [options]\n`);
+    console.log(`  npx my-boilerplate-generator <path> <template> [options]\n`);
     console.log(`${colors.bold}Examples:${colors.reset}`);
-    console.log(`  boiler-generate ./src redux user`);
-    console.log(`  boiler-generate ./components form contact`);
-    console.log(`  boiler-generate ./api api products`);
-    console.log(`  boiler-generate ./src auth`);
-    console.log(`  boiler-generate ./src react-native`);
-    console.log(`  boiler-generate ./src react-native-navigation`);
-    console.log(`  boiler-generate ./utils hooks\n`);
+    console.log(`  npx my-boilerplate-generator ./src redux user`);
+    console.log(`  npx my-boilerplate-generator ./components form contact`);
+    console.log(`  npx my-boilerplate-generator ./api api products`);
+    console.log(`  npx my-boilerplate-generator ./src auth`);
+    console.log(`  npx my-boilerplate-generator ./src react-native`);
+    console.log(`  npx my-boilerplate-generator ./src react-native-navigation`);
+    console.log(`  npx my-boilerplate-generator ./utils hooks\n`);
     this.showAvailableTemplates();
   }
 

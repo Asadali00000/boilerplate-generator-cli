@@ -1,37 +1,42 @@
 const { createFileStructure } = require('../utils/fileUtils');
 
 class ReactNativeNavigationBoilerplate {
-  generateNavigationBoilerplate(projectPath, options = {}) {
-    const structure = {
-      // Navigation files only, no screens!
-      'navigation/AppNavigator.js': this.getAppNavigator(),
-      'navigation/AuthNavigator.js': this.getAuthNavigator(),
-      'navigation/TabNavigator.js': this.getTabNavigator(),
-      'navigation/DrawerNavigator.js': this.getDrawerNavigator(),
-      'navigation/navigationTypes.js': this.getNavigationTypes(),
-      'navigation/index.js': this.getNavigationIndex(),
-    };
+	generateNavigationBoilerplate(projectPath, options = {}) {
+		const structure = {
+			// Navigation files only, no screens!
+			'navigation/AppNavigator.js': this.getAppNavigator(),
+			'navigation/AuthNavigator.js': this.getAuthNavigator(),
+			'navigation/TabNavigator.js': this.getTabNavigator(),
+			'navigation/DrawerNavigator.js': this.getDrawerNavigator(),
+			'navigation/navigationTypes.js': this.getNavigationTypes(),
+			'navigation/index.js': this.getNavigationIndex(),
+		};
 
-    createFileStructure(projectPath, structure);
+		createFileStructure(projectPath, structure);
 
-    return {
-      dependencies: [
-        '@react-navigation/native',
-        '@react-navigation/stack',
-        '@react-navigation/bottom-tabs',
-        '@react-navigation/drawer',
-      ],
-      instructions: [
-        'Install dependencies above using npm or yarn.',
-        'In App.js (project root), use: import { AppNavigator } from "./src/reactnativeboilerplate/navigation";',
-        'Add your actual screens/components and update navigators accordingly.',
-      ],
-      files: Object.keys(structure),
-    };
-  }
+		return {
+			dependencies: [
+				'@react-navigation/native',
+				'@react-navigation/stack',
+				'@react-navigation/bottom-tabs',
+				'@react-navigation/drawer',
+				'react-native-gesture-handler',
+				'react-native-safe-area-context',
+				'react-native-screens',
 
-  getAppNavigator() {
-    return `import React from 'react';
+			],
+			instructions: [
+				`Navigation`,
+				'Install dependencies above using npm or yarn.',
+				'In App.js (project root), use: import { AppNavigator } from "./src/reactnativeboilerplate/navigation";',
+				'Add your actual screens/components and update navigators accordingly.',
+			],
+			files: Object.keys(structure),
+		};
+	}
+
+	getAppNavigator() {
+		return `import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AuthNavigator from './AuthNavigator';
 import DrawerNavigator from './DrawerNavigator';
@@ -46,10 +51,10 @@ export default function AppNavigator() {
   );
 }
 `;
-  }
+	}
 
-  getAuthNavigator() {
-    return `import React from 'react';
+	getAuthNavigator() {
+		return `import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 // import your screens here
 
@@ -64,10 +69,10 @@ export default function AuthNavigator() {
   );
 }
 `;
-  }
+	}
 
-  getTabNavigator() {
-    return `import React from 'react';
+	getTabNavigator() {
+		return `import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import your screens here
 
@@ -82,10 +87,10 @@ export default function TabNavigator() {
   );
 }
 `;
-  }
+	}
 
-  getDrawerNavigator() {
-    return `import React from 'react';
+	getDrawerNavigator() {
+		return `import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 // import your screens or navigators here
 
@@ -100,10 +105,10 @@ export default function DrawerNavigator() {
   );
 }
 `;
-  }
+	}
 
-  getNavigationTypes() {
-    return `// Define your navigation types here (if you use TypeScript, rename this file to navigationTypes.ts)
+	getNavigationTypes() {
+		return `// Define your navigation types here (if you use TypeScript, rename this file to navigationTypes.ts)
 export const NAVIGATION_ROUTES = {
   // HOME: 'Home',
   // PROFILE: 'Profile',
@@ -112,16 +117,16 @@ export const NAVIGATION_ROUTES = {
   // REGISTER: 'Register',
 };
 `;
-  }
+	}
 
-  getNavigationIndex() {
-    return `// Export all navigators from here
+	getNavigationIndex() {
+		return `// Export all navigators from here
 export { default as AppNavigator } from './AppNavigator';
 export { default as AuthNavigator } from './AuthNavigator';
 export { default as TabNavigator } from './TabNavigator';
 export { default as DrawerNavigator } from './DrawerNavigator';
 `;
-  }
+	}
 }
 
 module.exports = ReactNativeNavigationBoilerplate;

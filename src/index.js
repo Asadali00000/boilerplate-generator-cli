@@ -10,7 +10,13 @@ const APIBoilerplate = require('./boilerplates/api');
 const AuthBoilerplate = require('./boilerplates/auth');
 const FormBoilerplate = require('./boilerplates/form');
 const askToInstall = require('./utils/installPackages');
+
+// React Native boilerplate modules
 const ReactNativeNavigationBoilerplate = require('./boilerplatesReactNative/navigation');
+const ReactNativeAssetsBoilerplate = require('./boilerplatesReactNative/assests')
+const ReactNativeServicesBoilerplate = require('./boilerplatesReactNative/services')
+const ReactNativeReduxToolkitBoilerplate = require('./boilerplatesReactNative/redux')
+
 
 class BoilerplateGenerator {
   constructor() {
@@ -19,7 +25,12 @@ class BoilerplateGenerator {
     this.apiBoilerplate = new APIBoilerplate();
     this.authBoilerplate = new AuthBoilerplate();
     this.formBoilerplate = new FormBoilerplate();
+
+    // React Native boilerplate modules
     this.reactNativeNavigationBoilerplate = new ReactNativeNavigationBoilerplate();
+    this.reactNativeAssetsBoilerplate = new ReactNativeAssetsBoilerplate();
+    this.reactNativeServicesBoilerplate = new ReactNativeServicesBoilerplate();
+    this.reactNativeReduxToolkitBoilerplate = new ReactNativeReduxToolkitBoilerplate();
 
     // Map template types to their respective generators
     this.templates = {
@@ -27,8 +38,14 @@ class BoilerplateGenerator {
       api: this.apiBoilerplate.generateAPIBoilerplate.bind(this.apiBoilerplate),
       auth: this.authBoilerplate.generateAuthBoilerplate.bind(this.authBoilerplate),
       form: this.formBoilerplate.generateFormBoilerplate.bind(this.formBoilerplate),
+
+
       'react-native': this.generateReactNativeBoilerplate.bind(this),
       'react-native-navigation': this.reactNativeNavigationBoilerplate.generateNavigationBoilerplate.bind(this.reactNativeNavigationBoilerplate),
+      'react-native-assets': this.reactNativeAssetsBoilerplate.generateAssetsBoilerplate.bind(this.reactNativeAssetsBoilerplate),
+      'react-native-services': this.reactNativeServicesBoilerplate.generateServicesBoilerplate.bind(this.reactNativeServicesBoilerplate),
+      'react-native-redux': this.reactNativeReduxToolkitBoilerplate.generateReduxToolkitBoilerplate.bind(this.reactNativeReduxToolkitBoilerplate),
+
       // TODO: Add other boilerplate types as they are implemented
       // crud: this.crudBoilerplate.generateCRUDBoilerplate.bind(this.crudBoilerplate),
       // hooks: this.hooksBoilerplate.generateHooksBoilerplate.bind(this.hooksBoilerplate),
@@ -47,12 +64,28 @@ class BoilerplateGenerator {
     const allInstructions = [];
     const allFiles = [];
 
-    // Generate Redux boilerplate
-    console.log(`${colors.cyan}Adding Redux boilerplate...${colors.reset}`);
-    const reduxResult = this.reduxBoilerplate.generateReduxBoilerplate(projectPath, options);
-    allDependencies.push(...(reduxResult.dependencies || []));
-    allInstructions.push(...(reduxResult.instructions || []));
-    allFiles.push(...(reduxResult.files || []));
+    // ADD REACT NATIVE ASSETS FOLDER INSIDE SRC FOLDER.
+    console.log(`${colors.cyan}Adding assets folder...${colors.reset}`);
+    const reactNativeAssetsResult = this.reactNativeAssetsBoilerplate.generateAssetsBoilerplate(projectPath, options);
+    allDependencies.push(...(reactNativeAssetsResult.dependencies || []));
+    allInstructions.push(...(reactNativeAssetsResult.instructions || []));
+    allFiles.push(...(reactNativeAssetsResult.files || []));
+
+    // ADD REACT NATIVE REDUX FOLDER INSIDE SRC FOLDER.
+    console.log(`${colors.cyan}Adding redux folder...${colors.reset}`);
+    const reactNativeReduxResult = this.reactNativeReduxToolkitBoilerplate.generateReduxToolkitBoilerplate(projectPath, options);
+    allDependencies.push(...(reactNativeReduxResult.dependencies || []));
+    allInstructions.push(...(reactNativeReduxResult.instructions || []));
+    allFiles.push(...(reactNativeReduxResult.files || []));
+
+    // ADD REACT NATIVE SERVICES FOLDER INSIDE SRC FOLDER.
+    console.log(`${colors.cyan}Adding services folder...${colors.reset}`);
+    const reactNativeServicesResult = this.reactNativeServicesBoilerplate.generateServicesBoilerplate(projectPath, options);
+    allDependencies.push(...(reactNativeServicesResult.dependencies || []));
+    allInstructions.push(...(reactNativeServicesResult.instructions || []));
+    allFiles.push(...(reactNativeServicesResult.files || []));
+
+
     console.log(`${colors.cyan}Adding Navigation boilerplate...${colors.reset}`);
     const navigationResult = this.reactNativeNavigationBoilerplate.generateNavigationBoilerplate(projectPath, options);
     allDependencies.push(...(navigationResult.dependencies || []));
@@ -179,7 +212,10 @@ class BoilerplateGenerator {
     console.log(`  ${colors.green}auth${colors.reset}         - Authentication system with context`);
     console.log(`  ${colors.green}form${colors.reset}         - Form components with validation`);
     console.log(`  ${colors.green}react-native${colors.reset} - Complete React Native setup (Redux + API + Auth + Form)`);
+    console.log(`  ${colors.green}react-native-assets${colors.reset} - React native assets folder with basic subfolder (fonts, images, icons)`);
     console.log(`  ${colors.green}react-native-navigation${colors.reset} - React Native Navigation boilerplate (Stack, Tab, Drawer, Auth)`);
+    console.log(`  ${colors.green}react-native-redux${colors.reset} - React Native Redux boilerplate (Persist store with asyncstorage , Root reducer to combile all reducers , Slice  with asyncthunk , Normal store)`);
+    console.log(`  ${colors.green}react-native-services${colors.reset} - React Native Services boilerplate (Axios/api.js with api call , Storage filder for multiple storage services (keychain , asyncstorage))`);
     console.log(`  ${colors.yellow}crud${colors.reset}         - Complete CRUD operations (coming soon)`);
     console.log(`  ${colors.yellow}hooks${colors.reset}        - Collection of custom React hooks (coming soon)`);
     console.log(`  ${colors.yellow}context${colors.reset}     - React Context setup (coming soon)`);

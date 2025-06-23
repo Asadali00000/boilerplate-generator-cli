@@ -1,7 +1,7 @@
 const { createFileStructure } = require('../utils/fileUtils');
 
-class ReactNativeReduxToolkitBoilerplate {
-    generateReduxToolkitBoilerplate(projectPath, options = {}) {
+class ReactNativeReduxBoilerplate {
+    generateReduxBoilerplate(projectPath, options = {}) {
         const structure = {
             'redux/persist/store.js': this.getPersistStore(),
             'redux/reducer/rootReducer.js': this.getReducer(),
@@ -142,4 +142,4 @@ export default store`
 
 }
 
-module.exports = ReactNativeReduxToolkitBoilerplate;
+module.exports = ReactNativeReduxBoilerplate;

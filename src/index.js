@@ -15,7 +15,7 @@ const askToInstall = require('./utils/installPackages');
 const ReactNativeNavigationBoilerplate = require('./boilerplatesReactNative/navigation');
 const ReactNativeAssetsBoilerplate = require('./boilerplatesReactNative/assests')
 const ReactNativeServicesBoilerplate = require('./boilerplatesReactNative/services')
-const ReactNativeReduxToolkitBoilerplate = require('./boilerplatesReactNative/redux')
+const ReactNativeReduxBoilerplate = require('./boilerplatesReactNative/redux')
 
 
 class BoilerplateGenerator {
@@ -30,21 +30,22 @@ class BoilerplateGenerator {
     this.reactNativeNavigationBoilerplate = new ReactNativeNavigationBoilerplate();
     this.reactNativeAssetsBoilerplate = new ReactNativeAssetsBoilerplate();
     this.reactNativeServicesBoilerplate = new ReactNativeServicesBoilerplate();
-    this.reactNativeReduxToolkitBoilerplate = new ReactNativeReduxToolkitBoilerplate();
+    this.reactNativeReduxBoilerplate = new ReactNativeReduxBoilerplate();
 
     // Map template types to their respective generators
     this.templates = {
+			// this is for web
       redux: this.reduxBoilerplate.generateReduxBoilerplate.bind(this.reduxBoilerplate),
       api: this.apiBoilerplate.generateAPIBoilerplate.bind(this.apiBoilerplate),
       auth: this.authBoilerplate.generateAuthBoilerplate.bind(this.authBoilerplate),
       form: this.formBoilerplate.generateFormBoilerplate.bind(this.formBoilerplate),
 
-
+  // this is for android
       'react-native': this.generateReactNativeBoilerplate.bind(this),
       'react-native-navigation': this.reactNativeNavigationBoilerplate.generateNavigationBoilerplate.bind(this.reactNativeNavigationBoilerplate),
       'react-native-assets': this.reactNativeAssetsBoilerplate.generateAssetsBoilerplate.bind(this.reactNativeAssetsBoilerplate),
       'react-native-services': this.reactNativeServicesBoilerplate.generateServicesBoilerplate.bind(this.reactNativeServicesBoilerplate),
-      'react-native-redux': this.reactNativeReduxToolkitBoilerplate.generateReduxToolkitBoilerplate.bind(this.reactNativeReduxToolkitBoilerplate),
+      'react-native-redux': this.reactNativeReduxBoilerplate.generateReduxBoilerplate.bind(this.reactNativeReduxBoilerplate),
 
       // TODO: Add other boilerplate types as they are implemented
       // crud: this.crudBoilerplate.generateCRUDBoilerplate.bind(this.crudBoilerplate),
@@ -73,7 +74,7 @@ class BoilerplateGenerator {
 
     // ADD REACT NATIVE REDUX FOLDER INSIDE SRC FOLDER.
     console.log(`${colors.cyan}Adding redux folder...${colors.reset}`);
-    const reactNativeReduxResult = this.reactNativeReduxToolkitBoilerplate.generateReduxToolkitBoilerplate(projectPath, options);
+    const reactNativeReduxResult = this.reactNativeReduxBoilerplate.generateReduxBoilerplate(projectPath, options);
     allDependencies.push(...(reactNativeReduxResult.dependencies || []));
     allInstructions.push(...(reactNativeReduxResult.instructions || []));
     allFiles.push(...(reactNativeReduxResult.files || []));

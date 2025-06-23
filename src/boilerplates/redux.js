@@ -18,7 +18,7 @@ class ReduxBoilerplate {
     return {
       dependencies: ['@reduxjs/toolkit', 'react-redux'],
       instructions: [
-				` Redux `
+				` Redux `,
         `Import the ${entityName}Slice in your store configuration`,
         `Wrap your app with Redux Provider`,
         `Add your API calls in the action creators`,

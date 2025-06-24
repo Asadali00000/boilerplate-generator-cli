@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const colors = require('./utils/colors');
+const { copyBoilerplateFolder } = require('./utils/fileUtils');
 
 // Import boilerplate modules
 const ReduxBoilerplate = require('./boilerplates/redux');
@@ -12,10 +13,10 @@ const FormBoilerplate = require('./boilerplates/form');
 const askToInstall = require('./utils/installPackages');
 
 // React Native boilerplate modules
-const ReactNativeNavigationBoilerplate = require('./boilerplatesReactNative/navigation');
-const ReactNativeAssetsBoilerplate = require('./boilerplatesReactNative/assests')
-const ReactNativeServicesBoilerplate = require('./boilerplatesReactNative/services')
-const ReactNativeReduxBoilerplate = require('./boilerplatesReactNative/redux')
+const ReactNativeNavigationBoilerplate = require('./boilerplatesReactNative/navigation/navigation');
+const ReactNativeAssetsBoilerplate = require('./boilerplatesReactNative/assets/assets')
+const ReactNativeServicesBoilerplate = require('./boilerplatesReactNative/services/services')
+const ReactNativeReduxBoilerplate = require('./boilerplatesReactNative/redux/redux')
 
 
 class BoilerplateGenerator {
@@ -58,67 +59,65 @@ class BoilerplateGenerator {
   }
 
   // Generate all React Native boilerplates
-  generateReactNativeBoilerplate(projectPath, options) {
+  async generateReactNativeBoilerplate(projectPath, options) {
     console.log(`${colors.blue}Generating React Native boilerplate...${colors.reset}`);
 
-    const allDependencies = [];
-    const allInstructions = [];
-    const allFiles = [];
+    // Path to the boilerplatesReactNative folder
+    const templateDir = path.join(__dirname, 'boilerplatesReactNative');
+    await copyBoilerplateFolder(templateDir, projectPath, ['assets.js','services.js','navigation.js','redux.js']);
 
-    // ADD REACT NATIVE ASSETS FOLDER INSIDE SRC FOLDER.
-    console.log(`${colors.cyan}Adding assets folder...${colors.reset}`);
-    const reactNativeAssetsResult = this.reactNativeAssetsBoilerplate.generateAssetsBoilerplate(projectPath, options);
-    allDependencies.push(...(reactNativeAssetsResult.dependencies || []));
-    allInstructions.push(...(reactNativeAssetsResult.instructions || []));
-    allFiles.push(...(reactNativeAssetsResult.files || []));
-
-    // ADD REACT NATIVE REDUX FOLDER INSIDE SRC FOLDER.
-    console.log(`${colors.cyan}Adding redux folder...${colors.reset}`);
-    const reactNativeReduxResult = this.reactNativeReduxBoilerplate.generateReduxBoilerplate(projectPath, options);
-    allDependencies.push(...(reactNativeReduxResult.dependencies || []));
-    allInstructions.push(...(reactNativeReduxResult.instructions || []));
-    allFiles.push(...(reactNativeReduxResult.files || []));
-
-    // ADD REACT NATIVE SERVICES FOLDER INSIDE SRC FOLDER.
-    console.log(`${colors.cyan}Adding services folder...${colors.reset}`);
-    const reactNativeServicesResult = this.reactNativeServicesBoilerplate.generateServicesBoilerplate(projectPath, options);
-    allDependencies.push(...(reactNativeServicesResult.dependencies || []));
-    allInstructions.push(...(reactNativeServicesResult.instructions || []));
-    allFiles.push(...(reactNativeServicesResult.files || []));
-
-
-    console.log(`${colors.cyan}Adding Navigation boilerplate...${colors.reset}`);
-    const navigationResult = this.reactNativeNavigationBoilerplate.generateNavigationBoilerplate(projectPath, options);
-    allDependencies.push(...(navigationResult.dependencies || []));
-    allInstructions.push(...(navigationResult.instructions || []));
-    allFiles.push(...(navigationResult.files || []));
-
-    // Add React Native specific dependencies
+    // Collect dependencies from all sub-generators using static methods
     const reactNativeDeps = [
       'react-native-vector-icons',
       '@react-native-async-storage/async-storage'
     ];
-    allDependencies.push(...reactNativeDeps);
+    const navigationDeps = ReactNativeNavigationBoilerplate.getDependencies();
+    const assetsDeps = ReactNativeAssetsBoilerplate.getDependencies();
+    const servicesDeps = ReactNativeServicesBoilerplate.getDependencies();
+    const reduxDeps = ReactNativeReduxBoilerplate.getDependencies();
+
+    // Combine and deduplicate all dependencies
+    const allDeps = Array.from(new Set([
+      ...reactNativeDeps,
+      ...navigationDeps,
+      ...assetsDeps,
+      ...servicesDeps,
+      ...reduxDeps
+    ]));
 
     // Add React Native specific instructions
     const reactNativeInstructions = [
-      'Install React Native dependencies: npm install ' + reactNativeDeps.join(' '),
+      'Install React Native dependencies: npm install ' + allDeps.join(' '),
       'Link vector icons: npx react-native link react-native-vector-icons',
       'For iOS: cd ios && pod install',
       'Configure navigation in App.js',
       'Add vector icons to android/app/build.gradle'
     ];
-    allInstructions.push(...reactNativeInstructions);
 
+    // List all files copied (for display)
+    const fs = require('fs');
+    const walkSync = (dir, filelist = [], baseDir = dir) => {
+      fs.readdirSync(dir).forEach(file => {
+        const fullPath = path.join(dir, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+          walkSync(fullPath, filelist, baseDir);
+        } else {
+          filelist.push(path.relative(baseDir, fullPath));
+        }
+      });
+      return filelist;
+    };
+    const allFiles = walkSync(templateDir);
+    console.log(allFiles)
     return {
-      dependencies: [...new Set(allDependencies)], // Remove duplicates
-      instructions: allInstructions,
+      dependencies: allDeps,
+      instructions: reactNativeInstructions,
       files: allFiles
     };
   }
 
   // Main CLI handler
-  run() {
+  async run() {
     const args = process.argv.slice(2);
 
     if (args.length < 2) {
@@ -135,14 +134,14 @@ class BoilerplateGenerator {
     }
 
     try {
-      this.addBoilerplateToProject(targetPath, templateType, options);
+      await this.addBoilerplateToProject(targetPath, templateType, options);
     } catch (error) {
       console.log(`${colors.red}Error: ${error.message}${colors.reset}`);
     }
   }
 
   // Add boilerplate to existing project
-  addBoilerplateToProject(targetPath, templateType, options) {
+  async addBoilerplateToProject(targetPath, templateType, options) {
     const fullPath = path.resolve(targetPath);
     console.log(targetPath, fullPath);
 
@@ -154,8 +153,11 @@ class BoilerplateGenerator {
 
     console.log(`${colors.blue}Adding ${templateType} boilerplate to: ${fullPath}${colors.reset}`);
 
-    // Generate template-specific files
-    const result = this.templates[templateType](fullPath, options);
+    // Generate template-specific files (support async)
+    let result = this.templates[templateType](fullPath, options);
+    if (result instanceof Promise) {
+      result = await result;
+    }
 
     console.log(`${colors.green}${colors.bold}✓ ${templateType} boilerplate added successfully!${colors.reset}`);
     process.stdout.write('\n');
@@ -229,7 +231,9 @@ class BoilerplateGenerator {
 // Run the CLI
 if (require.main === module) {
   const generator = new BoilerplateGenerator();
-  generator.run();
+  (async () => {
+    await generator.run();
+  })();
 }
 
 module.exports = BoilerplateGenerator;

@@ -16,22 +16,38 @@ A powerful CLI tool to generate boilerplate code for your existing projects. Thi
 ```
 boilerplate-cli/
 ├── src/
-│   ├── index.js                 # Main CLI entry point
-│   ├── boilerplates/            # Individual boilerplate generators
-│   │   ├── redux.js             # Redux boilerplate generator
-│   │   ├── api.js               # API boilerplate generator
-│   │   ├── auth.js              # Auth boilerplate generator
-│   │   └── form.js              # Form boilerplate generator
+│   ├── index.js
+│   ├── boilerplates/
+│   │   ├── redux/
+│   │   │   ├── redux.js           # Redux generator
+│   │   │   └── ...template files...
+│   │   ├── api/
+│   │   │   ├── api.js             # API generator
+│   │   │   └── ...template files...
+│   │   ├── auth/
+│   │   │   ├── auth.js            # Auth generator
+│   │   │   └── ...template files...
+│   │   └── form/
+│   │       ├── form.js            # Form generator
+│   │       └── ...template files...
 │   ├── boilerplatesReactNative/
-│   │   ├──assets.js          # react-native assests boilerplate generator
-│   │   ├──navigation.js      # react-native navigation boilerplate generator
-│   │   ├──redux.js           # react-native redux boilerplate generator
-│   │   ├──services.js        # react-native services boilerplate generator (axios etc)
-│   ├── utils/                   # Utility functions
-│   │   ├── colors.js            # ANSI color codes
-│   │   ├── installPackages.js   # install packages
-│   │   └── fileUtils.js         # File operations utilities
-│   └── templates/               # Template files (future use)
+│   │   ├── assets/
+│   │   │   ├── assets.js          # RN assets generator
+│   │   │   └── ...template files...
+│   │   ├── navigation/
+│   │   │   ├── navigation.js      # RN navigation generator
+│   │   │   └── ...template files...
+│   │   ├── redux/
+│   │   │   ├── redux.js           # RN redux generator
+│   │   │   └── ...template files...
+│   │   └── services/
+│   │       ├── services.js        # RN services generator
+│   │       └── ...template files...
+│   ├── utils/
+│   │   ├── colors.js
+│   │   ├── installPackages.js
+│   │   └── fileUtils.js
+│   └── templates/                 # (Optional: for shared or future templates)
 ├── package.json
 └── README.md
 ```

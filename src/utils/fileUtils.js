@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const colors = require('./colors');
+const fsExtra = require('fs-extra');
 
-// Helper method to create file structure
+// Helper method to create file structure (legacy: for code-generated files)
 const createFileStructure = (basePath, structure) => {
   Object.entries(structure).forEach(([filePath, content]) => {
-    console.log(filePath, basePath);
     const fullPath = path.join(basePath, filePath);
     const dir = path.dirname(fullPath);
 
@@ -25,6 +25,48 @@ const createFileStructure = (basePath, structure) => {
   });
 };
 
+// Copy an entire boilerplate folder to the target directory, ignoring files by name
+const copyBoilerplateFolder = async (templateDir, targetDir, ignore = []) => {
+  try {
+    await fsExtra.copy(templateDir, targetDir, {
+      overwrite: false,
+      errorOnExist: true,
+      filter: (src, dest) => {
+        const rel = path.relative(templateDir, src);
+        // Ignore files if their basename matches any ignore pattern
+        for (const pattern of ignore) {
+          if (path.basename(rel) === pattern) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
+    console.log(`${colors.green}✓ Boilerplate folder copied from ${templateDir} to ${targetDir}${colors.reset}`);
+  } catch (err) {
+    if (err.code === 'EEXIST') {
+      console.log(`${colors.yellow}⚠ Some files already exist in the target directory and were not overwritten.${colors.reset}`);
+    } else {
+      console.error(`${colors.red}Error copying boilerplate folder: ${err.message}${colors.reset}`);
+    }
+  }
+};
+
+// Recursively walk a directory and return all files relative to baseDir
+const walkSync = (dir, filelist = [], baseDir = dir) => {
+  fs.readdirSync(dir).forEach(file => {
+    const fullPath = path.join(dir, file);
+    if (fs.statSync(fullPath).isDirectory()) {
+      walkSync(fullPath, filelist, baseDir);
+    } else {
+      filelist.push(path.relative(baseDir, fullPath));
+    }
+  });
+  return filelist;
+};
+
 module.exports = {
-  createFileStructure
+  createFileStructure,
+  copyBoilerplateFolder,
+  walkSync
 };

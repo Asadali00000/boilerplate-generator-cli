@@ -6,10 +6,11 @@ const colors = require('./utils/colors');
 const { copyBoilerplateFolder } = require('./utils/fileUtils');
 
 // Import boilerplate modules
-const ReduxBoilerplate = require('./boilerplates/redux');
-const APIBoilerplate = require('./boilerplates/api');
-const AuthBoilerplate = require('./boilerplates/auth');
-const FormBoilerplate = require('./boilerplates/form');
+const ReduxBoilerplate = require('./boilerplates/redux/redux');
+const APIBoilerplate = require('./boilerplates/api/api');
+const AuthBoilerplate = require('./boilerplates/auth/auth');
+const FormBoilerplate = require('./boilerplates/form/form');
+const MiddleWareBoilerplate = require('./boilerplates/middleware/middleware');
 const askToInstall = require('./utils/installPackages');
 
 // React Native boilerplate modules
@@ -26,6 +27,7 @@ class BoilerplateGenerator {
     this.apiBoilerplate = new APIBoilerplate();
     this.authBoilerplate = new AuthBoilerplate();
     this.formBoilerplate = new FormBoilerplate();
+    this.middlewareBoilerplate = new MiddleWareBoilerplate();
 
     // React Native boilerplate modules
     this.reactNativeNavigationBoilerplate = new ReactNativeNavigationBoilerplate();
@@ -40,6 +42,7 @@ class BoilerplateGenerator {
       api: this.apiBoilerplate.generateAPIBoilerplate.bind(this.apiBoilerplate),
       auth: this.authBoilerplate.generateAuthBoilerplate.bind(this.authBoilerplate),
       form: this.formBoilerplate.generateFormBoilerplate.bind(this.formBoilerplate),
+      middleware: this.middlewareBoilerplate.generateMiddleWareBoilerplate.bind(this.middlewareBoilerplate),
 
   // this is for android
       'react-native': this.generateReactNativeBoilerplate.bind(this),

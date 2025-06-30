@@ -137,16 +137,12 @@ Generates complete authentication system with context, providers, and components
 - `utils/tokenUtils.js`
 - `constants/authConstants.js`
 
-### ✅ Many more
+### ✅ Middleware and Many more
 
 ### Check all Templates and commands
 ```bash
 npx my-boiler-generate
 ```
-
-
-
-
 
 ### 🚧 Coming Soon
 
@@ -162,35 +158,54 @@ npx my-boiler-generate
 
 ### Adding New Templates
 
-1. Create a new file in `src/boilerplates/` (e.g., `hooks.js`)
-2. Create a class that extends the boilerplate pattern
-3. Implement the `generate{TemplateName}Boilerplate` method
-4. Add template methods for generating individual files
-5. Import and register the new template in `src/index.js`
+Contributing a new boilerplate is now simpler than ever with our new folder-based structure.
+
+1.  **Create a Folder**: Inside `src/boilerplates/` (for web) or `src/boilerplatesReactNative/` (for React Native), create a new folder for your template (e.g., `hooks/`).
+
+2.  **Add Template Files**: Place all the files for your boilerplate directly inside this new folder (e.g., `hooks/useCustomHook.js`, `hooks/useDebounce.js`).
+
+3.  **Create the Generator File**: Inside the same folder, create a generator file (e.g., `hooks/hooks.js`). This file will contain the logic to copy the template.
+
+4.  **Implement the Generator Class**: Use the structure from the example below. The key parts are:
+    *   A static `getDependencies()` method to list any required npm packages.
+    *   An `async generate{TemplateName}Boilerplate()` method that:
+        *   Uses `copyBoilerplateFolder` to copy the entire directory.
+        *   Ignores its own generator file in the copy process.
+        *   Returns the dependencies, instructions, and a list of created files.
+
+5.  **Register the Template**: Import and register your new boilerplate generator in `src/index.js`.
 
 ### Example Template Structure
 
+Here's what a new `hooks` boilerplate generator would look like.
+
+**File Location**: `src/boilerplates/hooks/hooks.js`
+
 ```javascript
-const { createFileStructure } = require('../utils/fileUtils');
+const path = require('path');
+const { copyBoilerplateFolder, walkSync } = require('../../utils/fileUtils');
 
 class HooksBoilerplate {
-  generateHooksBoilerplate(projectPath, options) {
-    const structure = {
-      'hooks/useCustomHook.js': this.getCustomHook(),
-      // ... more files
-    };
-
-    createFileStructure(projectPath, structure);
-
-    return {
-      dependencies: [],
-      instructions: ['Use the generated hooks in your components'],
-      files: Object.keys(structure)
-    };
+  // 1. Define static dependencies
+  static getDependencies() {
+    return []; // e.g., ['lodash.debounce']
   }
 
-  getCustomHook() {
-    return `// Custom hook implementation`;
+  // 2. Implement the generator method
+  async generateHooksBoilerplate(projectPath, options) {
+    const templateDir = __dirname; // The current folder
+
+    // 3. Copy the entire folder, ignoring the generator file
+    await copyBoilerplateFolder(templateDir, path.join(projectPath, 'hooks'), ['hooks.js']);
+
+    // 4. List the files that were copied
+    const allFiles = walkSync(templateDir).filter(f => f !== 'hooks.js');
+
+    return {
+      dependencies: HooksBoilerplate.getDependencies(),
+      instructions: ['Import and use the generated hooks in your components.'],
+      files: allFiles
+    };
   }
 }
 

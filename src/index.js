@@ -10,7 +10,7 @@ const ReduxBoilerplate = require('./boilerplates/redux/redux');
 const APIBoilerplate = require('./boilerplates/api/api');
 const AuthBoilerplate = require('./boilerplates/auth/auth');
 const FormBoilerplate = require('./boilerplates/form/form');
-const MiddleWareBoilerplate = require('./boilerplates/middleware/middleware');
+const MiddleWareBoilerplate = require('./boilerplatesExpress/middleware/middleware');
 const askToInstall = require('./utils/installPackages');
 
 // React Native boilerplate modules
@@ -44,6 +44,8 @@ class BoilerplateGenerator {
       form: this.formBoilerplate.generateFormBoilerplate.bind(this.formBoilerplate),
       middleware: this.middlewareBoilerplate.generateMiddleWareBoilerplate.bind(this.middlewareBoilerplate),
 
+  // this is for exress
+   	'express': this.generateExpressBoilerplate.bind(this),
   // this is for android
       'react-native': this.generateReactNativeBoilerplate.bind(this),
       'react-native-navigation': this.reactNativeNavigationBoilerplate.generateNavigationBoilerplate.bind(this.reactNativeNavigationBoilerplate),
@@ -61,7 +63,82 @@ class BoilerplateGenerator {
     };
   }
 
-  // Generate all React Native boilerplates
+  // Generate all Express boilerplates
+  async generateExpressBoilerplate(projectPath, options) {
+    console.log(`${colors.blue}Generating Express boilerplate...${colors.reset}`);
+
+    // Path to the boilerplatesExpress folder
+    const templateDir = path.join(__dirname, 'boilerplatesExpress');
+    await copyBoilerplateFolder(templateDir, projectPath, ['middleware.js']);
+
+    // Collect dependencies from all sub-generators using static methods
+		const expressDeps = [
+			'express',
+			'cors',
+			'dotenv',
+			'nodemon'
+		]
+    const middlewareDeps = MiddleWareBoilerplate.getDependencies();
+
+
+    // Combine and deduplicate all dependencies
+    const allDeps = Array.from(new Set([
+...middlewareDeps,
+...expressDeps
+    ]));
+
+    // Add React Native specific instructions
+    const expressInstructions = [
+      'Install Express dependencies: npm install ' + allDeps.join(' '),
+      'Run the server: npm run dev',
+      'Access the API at http://localhost:3000'
+    ];
+
+    // List all files copied (for display)
+    const fs = require('fs');
+    const walkSync = (dir, filelist = [], baseDir = dir) => {
+      fs.readdirSync(dir).forEach(file => {
+        const fullPath = path.join(dir, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+          walkSync(fullPath, filelist, baseDir);
+        } else {
+          filelist.push(path.relative(baseDir, fullPath));
+        }
+      });
+      return filelist;
+    };
+    const allFiles = walkSync(templateDir);
+    console.log(allFiles)
+    return {
+      dependencies: allDeps,
+      instructions: expressInstructions,
+      files: allFiles
+    };
+  }
+
+  // Main CLI handler
+  async run() {
+    const args = process.argv.slice(2);
+
+    if (args.length < 2) {
+      this.showHelp();
+      return;
+    }
+
+    const [targetPath, templateType, ...options] = args;
+
+    if (!this.templates[templateType]) {
+      console.log(`${colors.red}Error: Template "${templateType}" not found!${colors.reset}`);
+      this.showAvailableTemplates();
+      return;
+    }
+
+    try {
+      await this.addBoilerplateToProject(targetPath, templateType, options);
+    } catch (error) {
+      console.log(`${colors.red}Error: ${error.message}${colors.reset}`);
+    }
+  }
   async generateReactNativeBoilerplate(projectPath, options) {
     console.log(`${colors.blue}Generating React Native boilerplate...${colors.reset}`);
 

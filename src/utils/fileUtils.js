@@ -30,7 +30,7 @@ const copyBoilerplateFolder = async (templateDir, targetDir, ignore = []) => {
   try {
     await fsExtra.copy(templateDir, targetDir, {
       overwrite: false,
-      errorOnExist: true,
+      errorOnExist: false,
       filter: (src, dest) => {
         const rel = path.relative(templateDir, src);
         // Ignore files if their basename matches any ignore pattern
@@ -39,12 +39,17 @@ const copyBoilerplateFolder = async (templateDir, targetDir, ignore = []) => {
             return false;
           }
         }
+        // Only check for files (not directories)
+        if (fs.existsSync(dest) && fs.lstatSync(src).isFile()) {
+          console.log(`${colors.yellow}⚠ File already exists and was not overwritten: ${path.relative(targetDir, dest)}${colors.reset}`);
+          return false;
+        }
         return true;
       }
     });
-    console.log(`${colors.green}✓ Boilerplate folder copied from ${templateDir} to ${targetDir}${colors.reset}`);
+    console.log(`${colors.green}✓ Boilerplate  copied   to ${targetDir}${colors.reset}`);
   } catch (err) {
-    if (err.code === 'EEXIST') {
+    if (err.message && err.message.includes('already exists')) {
       console.log(`${colors.yellow}⚠ Some files already exist in the target directory and were not overwritten.${colors.reset}`);
     } else {
       console.error(`${colors.red}Error copying boilerplate folder: ${err.message}${colors.reset}`);

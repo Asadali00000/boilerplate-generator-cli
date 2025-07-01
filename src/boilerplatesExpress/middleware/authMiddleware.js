@@ -17,7 +17,7 @@ app.get('/api/users', (req, res) => {
 
 
 
-const { verifyJwt } = require('./verifyToken');
+const { verifyJwt } = require('./utils/verifyToken');
 
 // Public paths that don't need authentication
 const publicPaths = ['/signin', '/admin/create', '/verifyEmail', '/razorpay/webhook'];

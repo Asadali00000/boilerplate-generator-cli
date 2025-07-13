@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const colors = require('./colors');
 const fsExtra = require('fs-extra');
+const inquirer = require('inquirer');
 
 // Helper method to create file structure (legacy: for code-generated files)
 const createFileStructure = (basePath, structure) => {
@@ -70,8 +71,65 @@ const walkSync = (dir, filelist = [], baseDir = dir) => {
   return filelist;
 };
 
+async function askYesNo(message, defaultValue = false) {
+  const { answer } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'answer',
+      message,
+      default: defaultValue,
+    },
+  ]);
+  return answer;
+}
+
+async function askInput(message) {
+
+  const { value } = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'value',
+      message,
+      validate: input => input.trim() ? true : 'Input cannot be empty.'
+    }
+  ]);
+  return value.trim();
+}
+
+/**
+ * Parses Gemini AI output in the format:
+ * <relative/path/to/file.ext>\n```js\n// file content\n```\n...
+ * Returns: [{ file, content }]
+ */
+function parseGeminiOutput(aiOutput) {
+  const files = [];
+  // Match: <path/to/file.ext>\n```lang\ncontent\n```
+  const fileBlockRegex = /<([^>]+)>[\r\n]+```[\w-]*\n([\s\S]*?)\n```/g;
+  let match;
+  while ((match = fileBlockRegex.exec(aiOutput)) !== null) {
+    const file = match[1].trim();
+    const content = match[2].trim();
+    files.push({ file, content });
+  }
+  return files;
+}
+
+/**
+ * Extracts dependencies from a ```deps code block in the Gemini output.
+ * Returns: [ 'package1', 'package2', ... ]
+ */
+function extractGeminiDependencies(aiOutput) {
+  const match = aiOutput.match(/```deps\n([\s\S]*?)\n```/);
+  if (!match) return [];
+  return match[1].split('\n').map(dep => dep.trim()).filter(Boolean);
+}
+
 module.exports = {
   createFileStructure,
   copyBoilerplateFolder,
-  walkSync
+  walkSync,
+  askYesNo,
+  parseGeminiOutput,
+  extractGeminiDependencies,
+  askInput,
 };

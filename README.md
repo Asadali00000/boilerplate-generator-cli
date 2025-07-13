@@ -212,6 +212,15 @@ class HooksBoilerplate {
 module.exports = HooksBoilerplate;
 ```
 
+## AI-Powered Boilerplate Generation (Gemini)
+
+This CLI supports generating boilerplate code for new templates using Google Gemini AI. If you request a template that does not exist in the built-in list, you will be prompted to use the AI feature. The AI will generate the minimal, standard boilerplate for the requested type and create new files and folders as needed.
+
+**Important:**
+- The AI feature will **not modify or overwrite your existing project structure or files**. It only creates new files and folders for the requested boilerplate.
+- You will be prompted for a Gemini API key the first time you use the AI feature. The key is stored securely in your local system for future use.
+- If the API key is invalid or expired, you will be prompted to enter a new one.
+
 ## 🤝 Contributing
 
 1. Fork the repository

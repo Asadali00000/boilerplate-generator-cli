@@ -1,6 +1,6 @@
 {
   "name": "my-boilerplate-generator",
-  "version": "1.4.2",
+  "version": "2.4.2",
   "description": "CLI tool to generate boilerplate code in existing projects",
   "main": "src/index.js",
   "bin": {
@@ -41,7 +41,6 @@
     "LICENSE"
   ],
   "dependencies": {
-    "enquirer": "^2.4.1",
     "fs-extra": "^11.2.0",
     "inquirer": "^8.2.6"
   },

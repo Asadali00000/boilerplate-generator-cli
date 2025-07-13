@@ -1,7 +1,15 @@
 const inquirer = require('inquirer');
-const { execSync } = require('child_process');
-const colors = require('./colors');
 
+const colors = require('./colors');
+const { spawn } = require('child_process');
+let currentChild = null;
+
+process.on('SIGINT', () => {
+  if (currentChild) {
+    currentChild.kill('SIGINT');
+  }
+  process.exit();
+});
 
 async function askToInstall(dependencies){
 	  const { shouldInstall }=await inquirer.prompt([
@@ -19,21 +27,31 @@ async function askToInstall(dependencies){
 	  }
 }
 
-function installPackages(dependencies){
-
-	dependencies.forEach(dep => {
-		// console.log(dep)
-		// const installProcess=execSync(`npm install ${dep}`);
-		// installProcess.stdout.pipe(process.stdout)
-		// installProcess.stderr.pipe(process.stderr)
-
-		try {
-            console.log(dep);
-            execSync(`npm install ${dep}`, { stdio: 'inherit' });
+async function installPackages(dependencies) {
+  for (const dep of dependencies) {
+    try {
+      console.log(`Installing ${dep}...`);
+      await new Promise((resolve, reject) => {
+        currentChild = spawn('npm', ['install', dep], { stdio: 'inherit', shell: true });
+        currentChild.on('close', (code) => {
+          currentChild = null;
+          if (code === 0) {
             console.log(`  ${colors.green}✓ ${dep} installed successfully. ${colors.reset}`);
-        } catch (err) {
+            resolve();
+          } else {
             console.error(`❌ Failed to install ${dep}`);
-        }
-	});
+            resolve(); // Continue to next even if failed
+          }
+        });
+        currentChild.on('error', (err) => {
+          currentChild = null;
+          console.error(`❌ Failed to install ${dep}`);
+          resolve(); // Continue to next even if failed
+        });
+      });
+    } catch (err) {
+      console.error(`❌ Failed to install ${dep}`);
+    }
+  }
 }
 module.exports=askToInstall

@@ -10,6 +10,9 @@ A powerful CLI tool to generate boilerplate code for your existing projects. Thi
 - **Dependency Management**: Suggests required npm packages
 - **File Structure Generation**: Creates organized folder structures
 - **Customizable**: Accepts options for entity names and customization
+- **Express Boilerplate Included**: Generates a minimal, production-ready Express boilerplate.
+- **React Native Boilerplate Included**: Generate a complete React Native project structure with navigation, assets, services, Redux, and more.
+- **AI-Powered Boilerplate Generation**: Use Gemini AI to generate new boilerplate code for templates not already included, with minimal setup and no risk to your existing files.
 
 ## 📁 Project Structure
 
@@ -30,6 +33,10 @@ boilerplate-cli/
 │   │   └── form/
 │   │       ├── form.js            # Form generator
 │   │       └── ...template files...
+│   ├── boilerplatesExpress/
+│   │   ├── express/
+│   │   │   ├── express.js          # RN express generator
+│   │   │   └── ...template files...
 │   ├── boilerplatesReactNative/
 │   │   ├── assets/
 │   │   │   ├── assets.js          # RN assets generator
@@ -45,6 +52,7 @@ boilerplate-cli/
 │   │       └── ...template files...
 │   ├── utils/
 │   │   ├── colors.js
+│   │   ├── geminiApi.js
 │   │   ├── installPackages.js
 │   │   └── fileUtils.js
 │   └── templates/                 # (Optional: for shared or future templates)
@@ -211,6 +219,25 @@ class HooksBoilerplate {
 
 module.exports = HooksBoilerplate;
 ```
+
+## Express Boilerplate Included
+
+This CLI includes a minimal, production-ready Express boilerplate. When you generate an Express project, you get:
+- `app.js` and `server.js` for app setup and server start
+- Organized folders for routes, controllers, config, and middleware
+- Minimal example route and controller
+- MongoDB connection setup (with Mongoose)
+- Error and 404 handling middleware
+- Example authentication middleware (with usage instructions in comments)
+
+**How to use:**
+1. Generate the Express boilerplate with the CLI.
+2. `cd` into the generated `express/` folder.
+3. All required dependencies (express, morgan, dotenv, mongoose, etc.) are automatically installed for you by the CLI(if you choose yes when cli ask). If you need additional packages, you can install them manually or update `package.json` as needed.
+4. Create a `.env` file with your MongoDB URI.
+5. Start the server with `npm start` or `node server.js`.
+6. Edit routes/controllers as needed for your app.
+7. All boilerplate code is in place—feel free to modify and extend it for your project.
 
 ## AI-Powered Boilerplate Generation (Gemini)
 

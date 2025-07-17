@@ -15,8 +15,9 @@ const ReduxBoilerplate = require('./boilerplates/redux/redux');
 const APIBoilerplate = require('./boilerplates/api/api');
 const AuthBoilerplate = require('./boilerplates/auth/auth');
 const FormBoilerplate = require('./boilerplates/form/form');
-const MiddleWareBoilerplate = require('./boilerplatesExpress/middleware/middleware');
+const MiddleWareBoilerplate = require('./boilerplatesExpress/express/middlewares/middleware');
 const askToInstall = require('./utils/installPackages');
+const ExpressBoilerplate = require('./boilerplatesExpress/express/express');
 
 // React Native boilerplate modules
 const ReactNativeNavigationBoilerplate = require('./boilerplatesReactNative/navigation/navigation');
@@ -33,6 +34,7 @@ class BoilerplateGenerator {
 		this.authBoilerplate = new AuthBoilerplate();
 		this.formBoilerplate = new FormBoilerplate();
 		this.middlewareBoilerplate = new MiddleWareBoilerplate();
+		this.expressBoilerplate = new ExpressBoilerplate();
 
 		// React Native boilerplate modules
 		this.reactNativeNavigationBoilerplate = new ReactNativeNavigationBoilerplate();
@@ -50,7 +52,7 @@ class BoilerplateGenerator {
 			middleware: this.middlewareBoilerplate.generateMiddleWareBoilerplate.bind(this.middlewareBoilerplate),
 
 			// this is for exress
-			'express': this.generateExpressBoilerplate.bind(this),
+			'express': this.expressBoilerplate.generateExpressBoilerplate.bind(this.expressBoilerplate),
 			// this is for android
 			'react-native': this.generateReactNativeBoilerplate.bind(this),
 			'react-native-navigation': this.reactNativeNavigationBoilerplate.generateNavigationBoilerplate.bind(this.reactNativeNavigationBoilerplate),
@@ -75,7 +77,7 @@ class BoilerplateGenerator {
 		// Path to the boilerplatesExpress folder
 		const templateDir = path.join(__dirname, 'boilerplatesExpress');
 		await copyBoilerplateFolder(templateDir, projectPath, ['middleware.js']);
-
+     console.log("inside this folder")
 		// Collect dependencies from all sub-generators using static methods
 		const expressDeps = [
 			'express',

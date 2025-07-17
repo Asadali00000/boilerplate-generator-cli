@@ -4,8 +4,8 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const exampleRoutes = require('./routes/exampleRoutes');
-const errorHandler = require('./middleware/errorHandler');
-const notFound = require('./middleware/notFound');
+const errorHandler = require('./middlewares/errorHandler');
+const notFound = require('./middlewares/notFound');
 
 // Load env
 dotenv.config();

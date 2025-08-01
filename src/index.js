@@ -25,6 +25,12 @@ const ReactNativeAssetsBoilerplate = require('./boilerplatesReactNative/assets/a
 const ReactNativeServicesBoilerplate = require('./boilerplatesReactNative/services/services')
 const ReactNativeReduxBoilerplate = require('./boilerplatesReactNative/redux/redux')
 
+// Individual React Native Navigation boilerplate modules
+const ReactNativeStackNavigatorBoilerplate = require('./boilerplatesReactNative/navigation/rnStackNavigator');
+const ReactNativeTabNavigatorBoilerplate = require('./boilerplatesReactNative/navigation/rnTabNavigator');
+const ReactNativeDrawerNavigatorBoilerplate = require('./boilerplatesReactNative/navigation/rnDrawerNavigator');
+const ReactNativeAuthNavigatorBoilerplate = require('./boilerplatesReactNative/navigation/rnAuthNavigator');
+
 
 class BoilerplateGenerator {
 	constructor() {
@@ -41,6 +47,12 @@ class BoilerplateGenerator {
 		this.reactNativeAssetsBoilerplate = new ReactNativeAssetsBoilerplate();
 		this.reactNativeServicesBoilerplate = new ReactNativeServicesBoilerplate();
 		this.reactNativeReduxBoilerplate = new ReactNativeReduxBoilerplate();
+
+		// Individual React Native Navigation boilerplate modules
+		this.reactNativeStackNavigatorBoilerplate = new ReactNativeStackNavigatorBoilerplate();
+		this.reactNativeTabNavigatorBoilerplate = new ReactNativeTabNavigatorBoilerplate();
+		this.reactNativeDrawerNavigatorBoilerplate = new ReactNativeDrawerNavigatorBoilerplate();
+		this.reactNativeAuthNavigatorBoilerplate = new ReactNativeAuthNavigatorBoilerplate();
 
 		// Map template types to their respective generators
 		this.templates = {
@@ -59,6 +71,12 @@ class BoilerplateGenerator {
 			'react-native-assets': this.reactNativeAssetsBoilerplate.generateAssetsBoilerplate.bind(this.reactNativeAssetsBoilerplate),
 			'react-native-services': this.reactNativeServicesBoilerplate.generateServicesBoilerplate.bind(this.reactNativeServicesBoilerplate),
 			'react-native-redux': this.reactNativeReduxBoilerplate.generateReduxBoilerplate.bind(this.reactNativeReduxBoilerplate),
+
+			// Individual React Native Navigation templates
+			'rnStackNavigator': this.reactNativeStackNavigatorBoilerplate.generateStackNavigatorBoilerplate.bind(this.reactNativeStackNavigatorBoilerplate),
+			'rnTabNavigator': this.reactNativeTabNavigatorBoilerplate.generateTabNavigatorBoilerplate.bind(this.reactNativeTabNavigatorBoilerplate),
+			'rnDrawerNavigator': this.reactNativeDrawerNavigatorBoilerplate.generateDrawerNavigatorBoilerplate.bind(this.reactNativeDrawerNavigatorBoilerplate),
+			'rnAuthNavigator': this.reactNativeAuthNavigatorBoilerplate.generateAuthNavigatorBoilerplate.bind(this.reactNativeAuthNavigatorBoilerplate),
 
 			// TODO: Add other boilerplate types as they are implemented
 			// crud: this.crudBoilerplate.generateCRUDBoilerplate.bind(this.crudBoilerplate),
@@ -399,6 +417,8 @@ class BoilerplateGenerator {
 		console.log(`  npx my-boilerplate-generator ./src auth`);
 		console.log(`  npx my-boilerplate-generator ./src react-native`);
 		console.log(`  npx my-boilerplate-generator ./src react-native-navigation`);
+		console.log(`  npx my-boilerplate-generator ./src rnStackNavigator`);
+		console.log(`  npx my-boilerplate-generator ./src rnTabNavigator`);
 		console.log(`  npx my-boilerplate-generator ./utils hooks\n`);
 		this.showAvailableTemplates();
 	}
@@ -414,6 +434,10 @@ class BoilerplateGenerator {
 		console.log(`  ${colors.green}react-native-navigation${colors.reset} - React Native Navigation boilerplate (Stack, Tab, Drawer, Auth)`);
 		console.log(`  ${colors.green}react-native-redux${colors.reset} - React Native Redux boilerplate (Persist store with asyncstorage , Root reducer to combile all reducers , Slice  with asyncthunk , Normal store)`);
 		console.log(`  ${colors.green}react-native-services${colors.reset} - React Native Services boilerplate (Axios/api.js with api call , Storage filder for multiple storage services (keychain , asyncstorage))`);
+		console.log(`  ${colors.green}rnStackNavigator${colors.reset} - React Native Stack Navigator only`);
+		console.log(`  ${colors.green}rnTabNavigator${colors.reset}   - React Native Tab Navigator only`);
+		console.log(`  ${colors.green}rnDrawerNavigator${colors.reset} - React Native Drawer Navigator only`);
+		console.log(`  ${colors.green}rnAuthNavigator${colors.reset}  - React Native Auth Navigator only`);
 		console.log(`  ${colors.yellow}crud${colors.reset}         - Complete CRUD operations (coming soon)`);
 		console.log(`  ${colors.yellow}hooks${colors.reset}        - Collection of custom React hooks (coming soon)`);
 		console.log(`  ${colors.yellow}context${colors.reset}     - React Context setup (coming soon)`);

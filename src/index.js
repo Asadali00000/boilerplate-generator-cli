@@ -15,6 +15,7 @@ const ReduxBoilerplate = require('./boilerplates/redux/redux');
 const APIBoilerplate = require('./boilerplates/api/api');
 const AuthBoilerplate = require('./boilerplates/auth/auth');
 const FormBoilerplate = require('./boilerplates/form/form');
+const EmailBoilerplate = require('./boilerplates/email/emailBoilerplate');
 const MiddleWareBoilerplate = require('./boilerplatesExpress/express/middlewares/middleware');
 const askToInstall = require('./utils/installPackages');
 const ExpressBoilerplate = require('./boilerplatesExpress/express/express');
@@ -39,6 +40,7 @@ class BoilerplateGenerator {
 		this.apiBoilerplate = new APIBoilerplate();
 		this.authBoilerplate = new AuthBoilerplate();
 		this.formBoilerplate = new FormBoilerplate();
+		this.emailBoilerplate = new EmailBoilerplate();
 		this.middlewareBoilerplate = new MiddleWareBoilerplate();
 		this.expressBoilerplate = new ExpressBoilerplate();
 
@@ -61,6 +63,7 @@ class BoilerplateGenerator {
 			api: this.apiBoilerplate.generateAPIBoilerplate.bind(this.apiBoilerplate),
 			auth: this.authBoilerplate.generateAuthBoilerplate.bind(this.authBoilerplate),
 			form: this.formBoilerplate.generateFormBoilerplate.bind(this.formBoilerplate),
+			email: this.emailBoilerplate.generateEmailBoilerplate.bind(this.emailBoilerplate),
 			middleware: this.middlewareBoilerplate.generateMiddleWareBoilerplate.bind(this.middlewareBoilerplate),
 
 			// this is for exress
@@ -415,6 +418,7 @@ class BoilerplateGenerator {
 		console.log(`  npx my-boilerplate-generator ./components form contact`);
 		console.log(`  npx my-boilerplate-generator ./api api products`);
 		console.log(`  npx my-boilerplate-generator ./src auth`);
+		console.log(`  npx my-boilerplate-generator ./src email`);
 		console.log(`  npx my-boilerplate-generator ./src react-native`);
 		console.log(`  npx my-boilerplate-generator ./src react-native-navigation`);
 		console.log(`  npx my-boilerplate-generator ./src rnStackNavigator`);
@@ -429,6 +433,7 @@ class BoilerplateGenerator {
 		console.log(`  ${colors.green}api${colors.reset}          - API service layer with hooks and types`);
 		console.log(`  ${colors.green}auth${colors.reset}         - Authentication system with context`);
 		console.log(`  ${colors.green}form${colors.reset}         - Form components with validation`);
+		console.log(`  ${colors.green}email${colors.reset}        - Email service with Nodemailer and example controllers`);
 		console.log(`  ${colors.green}react-native${colors.reset} - Complete React Native setup (Redux + API + Auth + Form)`);
 		console.log(`  ${colors.green}react-native-assets${colors.reset} - React native assets folder with basic subfolder (fonts, images, icons)`);
 		console.log(`  ${colors.green}react-native-navigation${colors.reset} - React Native Navigation boilerplate (Stack, Tab, Drawer, Auth)`);

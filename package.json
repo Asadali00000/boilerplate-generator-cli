@@ -46,6 +46,7 @@
     "@react-navigation/stack": "^7.4.4",
     "fs-extra": "^11.2.0",
     "inquirer": "^8.2.6",
+    "nodemailer": "^7.0.5",
     "react-native-gesture-handler": "^2.27.2",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-screens": "^4.13.1"

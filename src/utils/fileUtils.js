@@ -4,6 +4,27 @@ const colors = require('./colors');
 const fsExtra = require('fs-extra');
 const inquirer = require('inquirer');
 
+// Helper method to create a single file
+const createFile = (filePath, content) => {
+  const dir = path.dirname(filePath);
+
+  // Create directory if it doesn't exist
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  // Check if file already exists
+  if (fs.existsSync(filePath)) {
+    console.log(`${colors.yellow}⚠ File already exists: ${path.basename(filePath)}${colors.reset}`);
+    return false;
+  }
+
+  // Write file
+  fs.writeFileSync(filePath, content, 'utf8');
+  console.log(`${colors.green}✓ Created: ${path.basename(filePath)}${colors.reset}`);
+  return true;
+};
+
 // Helper method to create file structure (legacy: for code-generated files)
 const createFileStructure = (basePath, structure) => {
   Object.entries(structure).forEach(([filePath, content]) => {
@@ -125,6 +146,7 @@ function extractGeminiDependencies(aiOutput) {
 }
 
 module.exports = {
+  createFile,
   createFileStructure,
   copyBoilerplateFolder,
   walkSync,
